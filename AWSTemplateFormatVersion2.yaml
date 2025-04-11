@@ -79,6 +79,7 @@ Resources:
       UserData: !Base64 |
         #!/bin/bash
         yum update -y
+        amazon-linux-extras enable corretto17
         yum install -y java-1.8.0-openjdk aws-cli
 
         cd /home/ec2-user
@@ -86,8 +87,13 @@ Resources:
         # Download the JAR from S3
         aws s3 cp s3://devopssummative/DevOpsSummative-1.0-SNAPSHOT.jar app.jar
 
+        chmod +x app.jar
+
         # Run the Spring Boot application
         java -jar app.jar
+
+        echo "Spring Boot application is running in the background" >> /var/log/system.log
+        
       Tags:
         - Key: Name
           Value: WebServer
