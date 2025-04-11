@@ -27,6 +27,20 @@ Parameters:
 
 Resources:
 
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and HTTPS access via my IP address
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Ref MyIP
+
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -48,21 +62,7 @@ Resources:
     Properties:
       Path: "/"
       Roles:
-        - !Ref InstanceRole
-
-  WebServerSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Allow HTTP and HTTPS access via my IP address
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '80'
-          ToPort: '80'
-          CidrIp: !Ref MyIP
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: !Ref MyIP
+        - arn:aws:iam::312247312252:role/LabRole
 
   WebServer:
     Type: AWS::EC2::Instance
