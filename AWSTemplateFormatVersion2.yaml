@@ -27,33 +27,17 @@ Parameters:
 
 Resources:
 
-  # InstanceRole:  # Commented out as we are using an existing IAM role
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service:
-  #               - ec2.amazonaws.com
-  #           Action:
-  #             - sts:AssumeRole
-  #     Path: "/"
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: "/"
       Roles:
-        - LabRole  # Ensure this is just the name of the role, not the ARN.
+        - LabRole  # Ensure this is the role name, not ARN.
 
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow HTTP and HTTPS access via my IP address
+      GroupDescription: Allow HTTP, HTTPS, and Spring Boot app access
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: '80'
@@ -62,6 +46,10 @@ Resources:
         - IpProtocol: tcp
           FromPort: '443'
           ToPort: '443'
+          CidrIp: !Ref MyIP
+        - IpProtocol: tcp
+          FromPort: '8080'
+          ToPort: '8080'
           CidrIp: !Ref MyIP
 
   WebServer:
@@ -75,15 +63,16 @@ Resources:
       UserData: !Base64 |
         #!/bin/bash
         yum update -y
-        yum install -y java-1.8.0-openjdk aws-cli
+        amazon-linux-extras enable corretto17
+        yum install -y java-17-amazon-corretto aws-cli
 
         cd /home/ec2-user
 
         # Download the JAR from S3
         aws s3 cp s3://devopssummative/DevOpsSummative-1.0-SNAPSHOT.jar app.jar
 
-        # Run the Spring Boot application
-        java -jar app.jar
+        # Run the Spring Boot application in the background
+        nohup java -jar app.jar > app.log 2>&1 &
       Tags:
         - Key: Name
           Value: WebServer
@@ -94,4 +83,5 @@ Outputs:
       - ''
       - - http://
         - !GetAtt WebServer.PublicDnsName
-    Description: Website URL
+        - :8080
+    Description: Application URL
