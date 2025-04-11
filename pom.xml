@@ -42,7 +42,7 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven Plugin to build executable jar -->
+            <!-- Spring Boot Maven Plugin to build executable jar. -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
