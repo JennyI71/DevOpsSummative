@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: CloudFormation Template for WebServer with Security Group and EC2 Instance to run a Java Spring Boot Application
+Description: CloudFormation Template for WebServer with Security Group and EC2 Instance to run a Java Spring Boot Application from S3
 
 Parameters:
   LatestAmiId:
@@ -15,7 +15,7 @@ Parameters:
       - t3.micro
       - t2.micro
     ConstraintDescription: must be a valid EC2 instance type.
-    
+
   MyIP:
     Description: Your IP address in CIDR format (e.g. 203.0.113.1/32).
     Type: String
@@ -27,10 +27,33 @@ Parameters:
 
 Resources:
 
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref InstanceRole
+
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow HTTP access via my IP address
+      GroupDescription: Allow HTTP and HTTPS access via my IP address
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: '80'
@@ -48,22 +71,23 @@ Resources:
       InstanceType: !Ref InstanceType
       SecurityGroupIds:
         - !Ref WebServerSecurityGroup
+      IamInstanceProfile: !Ref InstanceProfile
       UserData: !Base64 |
         #!/bin/bash
         yum update -y
-        yum install -y java-1.8.0-openjdk-devel git maven
+        yum install -y java-1.8.0-openjdk aws-cli
 
-        # Clone your GitHub repository
         cd /home/ec2-user
-        git clone https://github.com/JennyI71/DevOpsSummative.git
-        cd YOUR_REPO
 
-        # Build the Java application using Maven
-        mvn clean install
+        # Download the JAR from S3
+        aws s3 cp s3://devopssummative/DevOpsSummative-1.0-SNAPSHOT.jar app.jar
 
-        # Run the Spring Boot application (adjust with your JAR file name)
-        java -jar target/DevOpsSummative-1.0-SNAPSHOT.jar
-# testing a change for the webhook.
+        # Run the Spring Boot application
+        java -jar app.jar
+      Tags:
+        - Key: Name
+          Value: WebServer
+
 Outputs:
   WebsiteURL:
     Value: !Join
