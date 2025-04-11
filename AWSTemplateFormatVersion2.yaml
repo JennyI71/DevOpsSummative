@@ -27,7 +27,7 @@ Parameters:
 
 Resources:
 
-  # InstanceRole:
+  # InstanceRole:  # Commented out as we are using an existing IAM role
   #   Type: AWS::IAM::Role
   #   Properties:
   #     AssumeRolePolicyDocument:
@@ -48,7 +48,7 @@ Resources:
     Properties:
       Path: "/"
       Roles:
-        - arn:aws:iam::312247312252:role/LabRole  # Reference your existing IAM role (LabRole)
+        - LabRole  # Ensure this is just the name of the role, not the ARN.
 
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
