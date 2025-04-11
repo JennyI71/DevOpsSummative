@@ -63,7 +63,7 @@ Resources:
 
         # Run the Spring Boot application (adjust with your JAR file name)
         java -jar target/DevOpsSummative-1.0-SNAPSHOT.jar
-# testing a change for the webhook
+# testing a change for the webhook.
 Outputs:
   WebsiteURL:
     Value: !Join
