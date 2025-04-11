@@ -84,16 +84,26 @@ Resources:
 
         cd /home/ec2-user
 
+        # Log start of S3 file download
+        echo "Starting download from S3" >> /var/log/system.log
+
         # Download the JAR from S3
-        aws s3 cp s3://devopssummative/DevOpsSummative-1.0-SNAPSHOT.jar app.jar
+        aws s3 cp s3://devopssummative/DevOpsSummative-1.0-SNAPSHOT.jar app.jar >> /var/log/system.log 2>&1
 
-        chmod +x app.jar
+        # Check if the file is downloaded
+        if [ ! -f /home/ec2-user/app.jar ]; then
+          echo "Failed to download the app.jar file from S3" >> /var/log/system.log
+          exit 1
+        fi
 
-        # Run the Spring Boot application
-        java -jar app.jar
+        # Make the JAR executable and log
+        chmod +x app.jar >> /var/log/system.log 2>&1
+
+        # Run the Spring Boot application and log output
+        java -jar app.jar >> /var/log/system.log 2>&1
 
         echo "Spring Boot application is running in the background" >> /var/log/system.log
-        
+
       Tags:
         - Key: Name
           Value: WebServer
