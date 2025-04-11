@@ -46,9 +46,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <version>3.4.1</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>repackage</goal>
+                    </goals>
+                </execution>
+            </executions>
             <configuration>
                 <executable>true</executable>
-                <mainClass>bpp.com.devops.Application</mainClass> <!-- Specify your main class explicitly -->
             </configuration>
         </plugin>
     </plugins>
