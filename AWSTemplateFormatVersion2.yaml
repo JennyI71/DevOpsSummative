@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CloudFormation Template for WebServer with Security Group and EC2 Instance to run a Java Spring Boot Application from S3
-
+# note for trigger
 Parameters:
   LatestAmiId:
     Description: The latest Amazon Linux 2 AMI from the Parameter Store
