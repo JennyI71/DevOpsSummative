@@ -10,6 +10,9 @@ phases:
     commands:
       - echo Building the project...
       - mvn clean package
+      - chmod +x scripts/deploy.sh
+
 artifacts:
   files:
     - target/DevOpsSummative-1.0-SNAPSHOT.jar
+    - scripts/deploy.sh
