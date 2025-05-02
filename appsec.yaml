@@ -20,11 +20,6 @@ hooks:
       timeout: 300
       runas: ec2-user
 
-  ApplicationStart:
-    - location: /bin/bash -c 'echo Starting the Java application...; nohup java -jar /home/ec2-user/app/DevOpsSummative-1.0-SNAPSHOT.jar > /home/ec2-user/app/app.log 2>&1 &'
-      timeout: 300
-      runas: ec2-user
-
   ValidateService:
     - location: /bin/bash -c 'echo Validating the service...; curl -f http://localhost:8080 || exit 1'
       timeout: 300
