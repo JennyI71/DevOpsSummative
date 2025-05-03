@@ -14,5 +14,6 @@ phases:
 
 artifacts:
   files:
+    - appspec.yml
     - target/DevOpsSummative-1.0-SNAPSHOT.jar
     - scripts/deploy.sh
