@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: target/DevOpsSummative-1.0-SNAPSHOT.jar
-    destination: scripts/
+    destination: /home/ec2-user/app
   - source: scripts/deploy.sh
-    destination: scripts/
+    destination: /home/ec2-user/scripts
 
 hooks:
   AfterInstall:
