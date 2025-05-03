@@ -1,26 +1,13 @@
 version: 0.0
 os: linux
 files:
-  - source: DevOpsSummative-1.0-SNAPSHOT.jar
-    destination: /home/ec2-user/app
+  - source: target/DevOpsSummative-1.0-SNAPSHOT.jar
+    destination: scripts/
+  - source: scripts/deploy.sh
+    destination: scripts/
 
 hooks:
-  BeforeInstall:
-    - location: /bin/bash -c 'echo Stopping any existing application if it exists...; ps aux | grep "java" | grep "DevOpsSummative-1.0-SNAPSHOT.jar" | awk "{print \$2}" | xargs kill -9'
-      timeout: 300
-      runas: ec2-user
-
-  Install:
-    - location: /bin/bash -c 'echo Installing necessary dependencies...; yum install -y java-17-amazon-corretto'
-      timeout: 300
-      runas: ec2-user
-
   AfterInstall:
     - location: scripts/deploy.sh
-      timeout: 300
-      runas: ec2-user
-
-  ValidateService:
-    - location: /bin/bash -c 'echo Validating the service...; curl -f http://localhost:8080 || exit 1'
       timeout: 300
       runas: ec2-user
