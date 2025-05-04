@@ -20,7 +20,7 @@ sudo chmod 755 "$APP_DIR/$JAR_NAME" || echo "Warning: chmod failed"
 echo "Ensuring log file is writable..."
 sudo touch "$APP_DIR/$LOG_FILE"
 sudo chown ec2-user:ec2-user "$APP_DIR/$LOG_FILE"
-sudo chmod 777 "$APP_DIR/$LOG_FILE"
+sudo chmod 666 "$APP_DIR/$LOG_FILE"  # Using 666 for writable access to ec2-user
 
 echo "Navigating to app directory: $APP_DIR"
 cd "$APP_DIR"
