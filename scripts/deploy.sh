@@ -4,6 +4,23 @@ set -e
 
 APP_DIR="/home/ec2-user/app"
 JAR_NAME="DevOpsSummative-1.0-SNAPSHOT.jar"
+LOG_FILE="app.log"
+
+# Ensure the EC2 user has ownership of the app directory and files
+echo "Ensuring correct permissions for the app directory..."
+sudo chown -R ec2-user:ec2-user "$APP_DIR"
+sudo chmod -R 755 "$APP_DIR"
+
+# Ensure the JAR file has the correct executable permission
+echo "Setting executable permission on JAR..."
+sudo chown ec2-user:ec2-user "$APP_DIR/$JAR_NAME"
+sudo chmod 755 "$APP_DIR/$JAR_NAME" || echo "Warning: chmod failed"
+
+# Ensure the log file is writable
+echo "Ensuring log file is writable..."
+sudo touch "$APP_DIR/$LOG_FILE"
+sudo chown ec2-user:ec2-user "$APP_DIR/$LOG_FILE"
+sudo chmod 777 "$APP_DIR/$LOG_FILE"
 
 echo "Navigating to app directory: $APP_DIR"
 cd "$APP_DIR"
@@ -22,11 +39,8 @@ if [ ! -f "$JAR_NAME" ]; then
   exit 1
 fi
 
-echo "Setting executable permission on JAR..."
-chmod +x "$JAR_NAME" || echo "Warning: chmod failed"
-
 echo "Starting the new Java app..."
-nohup java -jar "$JAR_NAME" > app.log 2>&1 &
+nohup java -jar "$JAR_NAME" > "$LOG_FILE" 2>&1 &
 
 # Wait for the app to actually start
 echo "Waiting for the app to start..."
