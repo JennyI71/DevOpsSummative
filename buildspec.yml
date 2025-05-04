@@ -11,9 +11,6 @@ phases:
       - echo Building the project...
       - mvn clean package
       - chmod +x scripts/deploy.sh
-      - chown ec2-user:ec2-user target/DevOpsSummative-1.0-SNAPSHOT.jar
-      - chown ec2-user:ec2-user scripts/deploy.sh
-
 
 artifacts:
   files:
