@@ -20,7 +20,27 @@ sudo chmod 755 "$APP_DIR/$JAR_NAME" || echo "Warning: chmod failed"
 echo "Ensuring log file is writable..."
 sudo touch "$APP_DIR/$LOG_FILE"
 sudo chown ec2-user:ec2-user "$APP_DIR/$LOG_FILE"
-sudo chmod 666 "$APP_DIR/$LOG_FILE"  # Using 666 for writable access to ec2-user
+sudo chmod 777 "$APP_DIR/$LOG_FILE"
+
+# Check if Java is installed
+echo "Checking for Java installation..."
+if ! command -v java &> /dev/null; then
+    echo "Java is not installed. Installing Amazon Corretto 17..."
+
+    # Install Java 17 (Amazon Corretto)
+    sudo yum update -y
+    sudo yum install java-17-amazon-corretto -y
+
+    # Verify installation
+    if ! command -v java &> /dev/null; then
+        echo "ERROR: Failed to install Java!"
+        exit 1
+    fi
+
+    echo "Java installed successfully!"
+else
+    echo "Java is already installed."
+fi
 
 echo "Navigating to app directory: $APP_DIR"
 cd "$APP_DIR"
