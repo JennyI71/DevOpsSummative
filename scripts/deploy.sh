@@ -7,8 +7,14 @@ cd /home/ec2-user/app
 echo "Stopping existing Java app if it's running..."
 ps aux | grep 'DevOpsSummative-1.0-SNAPSHOT.jar' | grep -v grep | awk '{print $2}' | xargs -r kill -9
 
-# Make the JAR file executable
-chmod +x DevOpsSummative-1.0-SNAPSHOT.jar
+# Make the JAR file executable (if it exists)
+if [ -f DevOpsSummative-1.0-SNAPSHOT.jar ]; then
+  echo "Setting executable permissions on the JAR..."
+  chmod +x DevOpsSummative-1.0-SNAPSHOT.jar || echo "Warning: Could not change permissions on JAR file"
+else
+  echo "Error: JAR file not found!"
+  exit 1
+fi
 
 # Start the new Java app in the background
 echo "Starting new Java app..."
