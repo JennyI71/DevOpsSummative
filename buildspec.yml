@@ -6,6 +6,10 @@ phases:
       java: corretto17
     commands:
       - echo Build started on `date`
+  test:
+    commands:
+      - echo Running unit tests...
+      - mvn test
   build:
     commands:
       - echo Building the project...
