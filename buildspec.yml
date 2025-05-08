@@ -21,5 +21,4 @@ artifacts:
   reports:
     java-test-report:
       files:
-        - '**/target/test-*.xml'
-
+        - '**/TEST-*.xml'
