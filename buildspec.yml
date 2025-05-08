@@ -10,6 +10,7 @@ phases:
     commands:
       - echo Building the project...
       - mvn clean package
+      - mvn test
       - chmod +x scripts/deploy.sh
 
 artifacts:
@@ -17,3 +18,8 @@ artifacts:
     - appspec.yml
     - target/DevOpsSummative-1.0-SNAPSHOT.jar
     - scripts/deploy.sh
+  reports:
+    java-test-report:
+      files:
+        - '**/target/test-*.xml'
+
